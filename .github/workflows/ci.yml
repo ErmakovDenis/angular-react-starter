@@ -25,12 +25,15 @@ jobs:
           node-version: '18'
       - name: Install dependencies
         run: cd angular/ && npm install
+      - name: Run tests
+        run: cd angular/ && npm run coverage
 
 
       - name: Login to GitHub Container Registry
+        if: always()
         uses: docker/login-action@v1
         with:
-          registry: ghcr.io
+          registry: ${{env.REGISTRY}}
           username: ${{github.actor}}
           password: ${{secrets.GITHUB_TOKEN}}
 
