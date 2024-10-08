@@ -21,7 +21,6 @@ jobs:
          echo "START_TIME=$(date +%s)" >> $GITHUB_ENV
 
       - name: get node.js version from package.json
-        working-directory: angular/
         id: get-versions
         run: echo ::set-output name=node::$(jq -r .engines.node ./package.json)
 
