@@ -35,6 +35,10 @@ jobs:
         working-directory: ${{ github.workspace }}/angular
         run: npm install
 
+      - name: install dependencies
+        working-directory: ${{ github.workspace }}/angular
+        run: npm run build
+
       #- name: run tests
       #  working-directory: ${{ github.workspace }}/angular
       #  run: npm run coverage
