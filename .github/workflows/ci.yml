@@ -29,11 +29,11 @@ jobs:
           node-version: ${{steps.get-versions.outputs.node}}
 
       - name: install dependencies
-        working-directory: angular
+        working-directory: ${{ github.workspace }}/angular
         run: npm install
 
       - name: run tests
-        working-directory: angular
+        working-directory: ${{ github.workspace }}/angular
         run: npm run coverage
 
       - name: login to github container registry
