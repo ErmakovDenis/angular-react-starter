@@ -29,7 +29,6 @@ jobs:
           node-version: ${{steps.get-versions.outputs.node}}
 
       - name: install dependencies
-        working-directory: angular/
         run: npm install
 
       - name: run tests
