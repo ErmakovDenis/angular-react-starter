@@ -25,7 +25,7 @@ jobs:
 
       - name: get node.js version from package.json
         id: get-versions
-        run: echo "::set-output name=node::$(jq -r .engines.node ${{ github.workspace }}/angular/package.json)"
+        run: echo "::set-output name=node::$(jq -r .version ${{ github.workspace }}/angular/package.json)"
 
       - uses: actions/setup-node@v1
         with:
