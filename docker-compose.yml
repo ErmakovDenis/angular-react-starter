@@ -4,4 +4,4 @@ services:
   angular-app:
     image: ghcr.io/ermakovdenis/angular-react-starter:master
     ports:
-      - "8080:80"
+      - "8080:8080"
