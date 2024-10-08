@@ -35,7 +35,7 @@ jobs:
         working-directory: ${{ github.workspace }}/angular
         run: npm install
 
-      - name: install dependencies
+      - name: build /dist
         working-directory: ${{ github.workspace }}/angular
         run: npm run build
 
@@ -56,13 +56,13 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
-      - name: build and push docker image
-        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
-        with:
-          context: .
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+      #- name: build and push docker image
+      #  uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+      #  with:
+      #    context: .
+      #    push: true
+      #    tags: ${{ steps.meta.outputs.tags }}
+      #    labels: ${{ steps.meta.outputs.labels }}
 
       - name: stop timer
         if: always()
