@@ -1,4 +1,5 @@
 name: Pipeline
+
 on:
   pull_request:
     branches:
@@ -6,7 +7,6 @@ on:
   push:
     branches:
       - test_task
-
 
 env:
   REGISTRY: ghcr.io
@@ -20,7 +20,7 @@ jobs:
         run: |
          echo "START_TIME=$(date +%s)" >> $GITHUB_ENV
 
-      - name: Checkout
+      - name: checkout
         uses: actions/checkout@v4
 
       - name: get node.js version from package.json
@@ -39,9 +39,9 @@ jobs:
         working-directory: ${{ github.workspace }}/angular
         run: npm run build
 
-      #- name: run tests
-      #  working-directory: ${{ github.workspace }}/angular
-      #  run: npm run coverage
+      - name: run tests
+        working-directory: ${{ github.workspace }}/angular
+        run: npm run coverage
 
       - name: login to github container registry
         uses: docker/login-action@v1
@@ -56,13 +56,13 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
-      #- name: build and push docker image
-      #  uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
-      #  with:
-      #    context: .
-      #    push: true
-      #    tags: ${{ steps.meta.outputs.tags }}
-      #    labels: ${{ steps.meta.outputs.labels }}
+      - name: build and push docker image
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
 
       - name: stop timer
         if: always()
