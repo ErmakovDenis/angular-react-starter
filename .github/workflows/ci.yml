@@ -15,6 +15,10 @@ env:
 jobs:
   ci:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ github.workspace }}/angular
+
     steps:
       - name: start timer
         run: |
@@ -25,22 +29,19 @@ jobs:
 
       - name: get node.js version from package.json
         id: get-versions
-        run: echo "::set-output name=node::$(jq -r .version ${{ github.workspace }}/angular/package.json)"
+        run: echo "version=$(jq -r .version package.json)" >> $GITHUB_OUTPUT
 
       - uses: actions/setup-node@v1
         with:
           node-version: ${{steps.get-versions.outputs.node}}
 
       - name: install dependencies
-        working-directory: ${{ github.workspace }}/angular
-        run: npm install
+        run: npm ci
 
       - name: build /dist
-        working-directory: ${{ github.workspace }}/angular
         run: npm run build
 
       - name: run tests
-        working-directory: ${{ github.workspace }}/angular
         run: npm run coverage
 
       - name: login to github container registry
@@ -83,30 +84,16 @@ jobs:
           echo "EXECUTION_TIME_SECONDS=$SECONDS" >> $GITHUB_ENV
           echo "Execution time: $HOURS hours $MINUTES minutes $SECONDS seconds"
 
-      - name: send success email
-        if: success()
+      - name: Send email notification
+        if: always()
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com
           username: ${{ secrets.EMAIL_USERNAME }}
           password: ${{ secrets.EMAIL_PASSWORD }}
-          subject: "CI Pipeline Success"
+          subject: "CI Pipeline ${{ job.status }}"
           body: |
-            Pipeline success! Finally!
-            Final execution time: ${{ env.EXECUTION_TIME_HOURS }} hours ${{ env.EXECUTION_TIME_MINUTES }} minutes ${{ env.EXECUTION_TIME_SECONDS }} seconds
-          to: clutcherdenis@gmail.com
-          from: ${{ secrets.EMAIL_USERNAME }}
-
-      - name: send failure email
-        if: failure()
-        uses: dawidd6/action-send-mail@v3
-        with:
-          server_address: smtp.gmail.com
-          username: ${{ secrets.EMAIL_USERNAME }}
-          password: ${{ secrets.EMAIL_PASSWORD }}
-          subject: "CI Pipeline Failure"
-          body: |
-            Pipeline failed (
-            Final execution time: ${{ env.EXECUTION_TIME_HOURS }} hours ${{ env.EXECUTION_TIME_MINUTES }} minutes ${{ env.EXECUTION_TIME_SECONDS }} seconds
+              Pipeline ${{ job.status }}!
+              Final execution time: ${{ env.EXECUTION_TIME_HOURS }} hours ${{ env.EXECUTION_TIME_MINUTES }} minutes ${{ env.EXECUTION_TIME_SECONDS }} seconds
           to: clutcherdenis@gmail.com
           from: ${{ secrets.EMAIL_USERNAME }}
