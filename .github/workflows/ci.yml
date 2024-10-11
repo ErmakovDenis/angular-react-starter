@@ -17,15 +17,15 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: angular
+        working-directory: ${{ github.workspace }}/angular
 
     steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
       - name: start timer
         run: |
          echo "START_TIME=$(date +%s)" >> $GITHUB_ENV
-
-      - name: checkout
-        uses: actions/checkout@v4
 
       - name: get node.js version from package.json
         id: get-versions
