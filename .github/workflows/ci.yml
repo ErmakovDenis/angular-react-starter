@@ -41,8 +41,8 @@ jobs:
       - name: build /dist
         run: npm run build
 
-      #- name: run tests
-      #  run: npm run coverage
+      - name: run tests
+        run: npm run coverage
 
       - name: login to github container registry
         uses: docker/login-action@v1
@@ -82,7 +82,6 @@ jobs:
           echo "EXECUTION_TIME_HOURS=$HOURS" >> $GITHUB_ENV
           echo "EXECUTION_TIME_MINUTES=$MINUTES" >> $GITHUB_ENV
           echo "EXECUTION_TIME_SECONDS=$SECONDS" >> $GITHUB_ENV
-          echo "Execution time: $HOURS hours $MINUTES minutes $SECONDS seconds"
 
       - name: Send email notification
         if: always()
