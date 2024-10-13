@@ -2,6 +2,6 @@ version: '3.8'
 
 services:
   angular-app:
-    image: ghcr.io/ermakovdenis/angular-react-starter:master
+    image: ghcr.io/ermakovdenis/angular-react-starter:test_task
     ports:
       - "8080:8080"
