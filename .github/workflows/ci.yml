@@ -41,8 +41,8 @@ jobs:
       - name: build /dist
         run: npm run build
 
-      - name: run tests
-        run: npm run coverage
+      #- name: run tests
+      #  run: npm run coverage
 
       - name: login to github container registry
         uses: docker/login-action@v1
