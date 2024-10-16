@@ -11,13 +11,13 @@ on:
     inputs:
       registry:
         description: 'Registry'
+        required: false
         default: 'ghcr.io'
-        required: true
         type: string
       server_address:
         description: 'Server address'
+        required: false
         default: 'smtp.gmail.com'
-        required: true
         type: string
 
 jobs:
