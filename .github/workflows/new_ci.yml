@@ -11,13 +11,13 @@ on:
     inputs:
       registry:
         description: 'Registry'
-        required: false
         default: 'ghcr.io'
+        required: true
         type: string
       server_address:
         description: 'Server address'
-        required: false
         default: 'smtp.gmail.com'
+        required: true
         type: string
 
 jobs:
@@ -33,76 +33,6 @@ jobs:
 
       - name: start timer
         run: |
-         echo "START_TIME=$(date +%s)" >> $GITHUB_ENV
-         echo The registry is ${{ github.event.inputs.registry }}
-         echo The server_address is ${{ github.event.inputs.server_address }}
-
-      - name: get node.js version from package.json
-        id: get-versions
-        run: echo "version=$(jq -r .version package.json)" >> $GITHUB_OUTPUT
-
-      - uses: actions/setup-node@v1
-        with:
-          node-version: ${{steps.get-versions.outputs.node}}
-
-      - name: install dependencies
-        run: npm ci
-
-      - name: build /dist
-        run: npm run build
-
-      #- name: run tests
-      #  run: npm run coverage
-
-      - name: login to github container registry
-        uses: docker/login-action@v1
-        with:
-          registry: ${{ github.event.inputs.registry }}
-          username: ${{github.actor}}
-          password: ${{secrets.PAT}}
-
-      - name: extract metadata (tags, labels) for docker
-        id: meta
-        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
-        with:
-          images: ${{ inputs.registry }}/${{ github.repository }}
-
-      - name: build and push docker image
-        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
-        with:
-          context: .
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-
-      - name: stop timer
-        if: always()
-        run: |
-          echo "STOP_TIME=$(date +%s)" >> $GITHUB_ENV
-
-      - name: counting the time
-        if: always()
-        run: |
-          START_TIME=$(echo ${{ env.START_TIME }})
-          STOP_TIME=$(echo ${{ env.STOP_TIME }})
-          EXECUTION_TIME=$((STOP_TIME - START_TIME))
-          HOURS=$((EXECUTION_TIME / 3600))
-          MINUTES=$((EXECUTION_TIME % 3600 / 60))
-          SECONDS=$((EXECUTION_TIME % 60))
-          echo "EXECUTION_TIME_HOURS=$HOURS" >> $GITHUB_ENV
-          echo "EXECUTION_TIME_MINUTES=$MINUTES" >> $GITHUB_ENV
-          echo "EXECUTION_TIME_SECONDS=$SECONDS" >> $GITHUB_ENV
-
-      - name: Send email notification
-        if: always()
-        uses: dawidd6/action-send-mail@v3
-        with:
-          server_address: ${{ github.event.inputs.server_address }}
-          username: ${{ secrets.EMAIL_USERNAME }}
-          password: ${{ secrets.EMAIL_PASSWORD }}
-          subject: "CI Pipeline ${{ job.status }}"
-          body: |
-              Pipeline ${{ job.status }}!
-              Final execution time: ${{ env.EXECUTION_TIME_HOURS }} hours ${{ env.EXECUTION_TIME_MINUTES }} minutes ${{ env.EXECUTION_TIME_SECONDS }} seconds
-          to: clutcherdenis@gmail.com
-          from: ${{ secrets.EMAIL_USERNAME }}
+          echo "START_TIME=$(date +%s)" >> $GITHUB_ENV
+          echo The registry is ${{ github.event.inputs.registry }}
+          echo The server_address is ${{ github.event.inputs.server_address }}
