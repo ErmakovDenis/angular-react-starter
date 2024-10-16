@@ -7,7 +7,7 @@ on:
   push:
     branches:
       - test_task
-  workflow_call:
+  workflow_dispatch:
     inputs:
       registry:
         description: 'Registry'
