@@ -7,7 +7,7 @@ on:
   push:
     branches:
       - test_task
-  workflow_call:
+  workflow_dispatch:
     inputs:
       registry:
         description: 'Registry'
@@ -34,8 +34,8 @@ jobs:
       - name: start timer
         run: |
          echo "START_TIME=$(date +%s)" >> $GITHUB_ENV
-         echo The registry is ${{ inputs.registry }}
-         echo The server_address is ${{ inputs.server_address }}
+         echo The registry is ${{ github.event.inputs.registry }}
+         echo The server_address is ${{ github.event.inputs.server_address }}
 
       - name: get node.js version from package.json
         id: get-versions
@@ -57,7 +57,7 @@ jobs:
       - name: login to github container registry
         uses: docker/login-action@v1
         with:
-          registry: ${{ inputs.registry }}
+          registry: ${{ github.event.inputs.registry }}
           username: ${{github.actor}}
           password: ${{secrets.PAT}}
 
@@ -97,7 +97,7 @@ jobs:
         if: always()
         uses: dawidd6/action-send-mail@v3
         with:
-          server_address: ${{ inputs.server_address }}
+          server_address: ${{ github.event.inputs.server_address }}
           username: ${{ secrets.EMAIL_USERNAME }}
           password: ${{ secrets.EMAIL_PASSWORD }}
           subject: "CI Pipeline ${{ job.status }}"
