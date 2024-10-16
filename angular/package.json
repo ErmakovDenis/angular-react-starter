@@ -1,6 +1,6 @@
 {
   "name": "angular-starter",
-  "version": "18.2.1",
+  "version": "18.20.1",
   "scripts": {
     "ng": "ng",
     "dev": "ng serve --port 4200",
