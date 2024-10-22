@@ -12,12 +12,12 @@ on:
       registry:
         description: 'Registry'
         default: 'ghcr.io'
-        required: true
+        required: false
         type: string
       server_address:
         description: 'Server address'
         default: 'smtp.gmail.com'
-        required: true
+        required: false
         type: string
 
 jobs:
@@ -34,5 +34,5 @@ jobs:
       - name: start timer
         run: |
           echo "START_TIME=$(date +%s)" >> $GITHUB_ENV
-          echo The registry is ${{ github.event.inputs.registry }}
-          echo The server_address is ${{ github.event.inputs.server_address }}
+          echo The registry is ${{ inputs.registry }}
+          echo The server_address is ${{ inputs.server_address }}
