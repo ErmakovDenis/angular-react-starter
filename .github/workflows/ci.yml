@@ -1,7 +1,6 @@
 name: Pipeline
 
 on:
-  push:
   workflow_dispatch:
     inputs:
       registry:
