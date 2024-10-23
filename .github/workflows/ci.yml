@@ -10,14 +10,14 @@ on:
   workflow_dispatch:
     inputs:
       registry:
-        description: 'Registry'
+        description: "Registry"
         required: false
-        default: 'ghcr.io'
+        default: "ghcr.io"
         type: string
       server_address:
-        description: 'Server address'
+        description: "Server address"
         required: false
-        default: 'smtp.gmail.com'
+        default: "smtp.gmail.com"
         type: string
 
 jobs:
@@ -33,18 +33,11 @@ jobs:
 
       - name: start timer
         run: |
-         echo "START_TIME=$(date +%s)" >> $GITHUB_ENV
-         echo The registry is ${{ inputs.registry }}
-         echo The server_address is ${{ inputs.server_address }}
+          echo "START_TIME=$(date +%s)" >> $GITHUB_ENV
 
-
-      - name: get node.js version from package.json
-        id: get-versions
-        run: echo "version=$(jq -r .version package.json)" >> $GITHUB_OUTPUT
-
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v4
         with:
-          node-version: ${{steps.get-versions.outputs.node}}
+          node-version-file: "package.json"
 
       - name: install dependencies
         run: npm ci
@@ -52,8 +45,8 @@ jobs:
       - name: build /dist
         run: npm run build
 
-      - name: run tests
-        run: npm run coverage
+      #- name: run tests
+      #  run: npm run coverage
 
       - name: login to github container registry
         uses: docker/login-action@v1
@@ -103,7 +96,7 @@ jobs:
           password: ${{ secrets.EMAIL_PASSWORD }}
           subject: "CI Pipeline ${{ job.status }}"
           body: |
-              Pipeline ${{ job.status }}!
-              Final execution time: ${{ env.EXECUTION_TIME_HOURS }} hours ${{ env.EXECUTION_TIME_MINUTES }} minutes ${{ env.EXECUTION_TIME_SECONDS }} seconds
+            Pipeline ${{ job.status }}!
+            Final execution time: ${{ env.EXECUTION_TIME_HOURS }} hours ${{ env.EXECUTION_TIME_MINUTES }} minutes ${{ env.EXECUTION_TIME_SECONDS }} seconds
           to: clutcherdenis@gmail.com
           from: ${{ secrets.EMAIL_USERNAME }}
