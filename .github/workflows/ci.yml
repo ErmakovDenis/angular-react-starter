@@ -87,6 +87,12 @@ jobs:
           echo "EXECUTION_TIME_MINUTES=$MINUTES" >> $GITHUB_ENV
           echo "EXECUTION_TIME_SECONDS=$SECONDS" >> $GITHUB_ENV
 
+      - name: counting the time gh cli
+        if: always()
+        run: |
+          ELAPSED=$(gh run list --filter="status:completed" --json="elapsed" | jq -r '.[0]')
+          echo $ELAPSED
+
       - name: Send email notification
         if: always()
         uses: dawidd6/action-send-mail@v3
