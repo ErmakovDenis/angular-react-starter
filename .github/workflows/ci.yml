@@ -90,7 +90,7 @@ jobs:
       - name: counting the time gh cli
         if: always()
         run: |
-          ELAPSED=$(gh run list --filter="status:completed" --json="elapsed" | jq -r '.[0]')
+          ELAPSED=$(gh run list --status:"completed" --json="elapsed" | jq -r '.[0]')
           echo $ELAPSED
 
       - name: Send email notification
