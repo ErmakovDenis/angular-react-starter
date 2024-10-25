@@ -10,25 +10,22 @@ on:
   workflow_dispatch:
     inputs:
       registry:
-        description: "Registry"
+        description: Docker Registry to push image
         required: false
-        default: "ghcr.io"
+        default: ghcr.io
         type: string
       server_address:
-        description: "Server address"
+        description: Address of the SMTP server for sending email notifications
         required: false
-        default: "smtp.gmail.com"
+        default: smtp.gmail.com
         type: string
-
-env:
-  GH_TOKEN: ${{ github.token }}
 
 jobs:
   ci:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ${{ github.workspace }}/angular
+        working-directory: angular
 
     steps:
       - name: checkout
@@ -90,16 +87,7 @@ jobs:
           echo "EXECUTION_TIME_MINUTES=$MINUTES" >> $GITHUB_ENV
           echo "EXECUTION_TIME_SECONDS=$SECONDS" >> $GITHUB_ENV
 
-      - name: counting the time gh cli
-        if: always()
-        run: |
-          START=$(gh run list --status="completed" --json="startedAt" | jq -r '.[0]')
-          echo $START
-          STOP= $(gh run list --status="completed" --json="conclusion" | jq -r '.[0]')
-          echo $STOP
-          F_TIME=$((STOP - START))
-          echo $F_TIME
-      - name: Send email notification
+      - name: send email notification
         if: always()
         uses: dawidd6/action-send-mail@v3
         with:
