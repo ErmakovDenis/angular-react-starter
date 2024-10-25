@@ -93,9 +93,12 @@ jobs:
       - name: counting the time gh cli
         if: always()
         run: |
-          ELAPSED=$(gh run list --status="completed" --json="startedAt" | jq -r '.[0]')
-          echo $ELAPSED
-
+          START=$(gh run list --status="completed" --json="startedAt" | jq -r '.[0]')
+          echo $START
+          STOP= $(gh run list --status="completed" --json="conclusion" | jq -r '.[0]')
+          echo $STOP
+          F_TIME=$((STOP - START))
+          echo $F_TIME
       - name: Send email notification
         if: always()
         uses: dawidd6/action-send-mail@v3
