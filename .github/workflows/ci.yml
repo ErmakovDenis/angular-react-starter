@@ -34,10 +34,11 @@ jobs:
       - name: start timer
         run: |
           echo "START_TIME=$(date +%s)" >> $GITHUB_ENV
-
-      - uses: actions/setup-node@v4
+      
+      - name: setup node
+        uses: actions/setup-node@v4
         with:
-          node-version-file: "angular/package.json"
+          node-version-file: angular/package.json
 
       - name: install dependencies
         run: npm ci
@@ -98,5 +99,5 @@ jobs:
           body: |
             Pipeline ${{ job.status }}!
             Final execution time: ${{ env.EXECUTION_TIME_HOURS }} hours ${{ env.EXECUTION_TIME_MINUTES }} minutes ${{ env.EXECUTION_TIME_SECONDS }} seconds
-          to: clutcherdenis@gmail.com
+          to: ${{ secrets.EMAIL_USERNAME }}
           from: ${{ secrets.EMAIL_USERNAME }}
